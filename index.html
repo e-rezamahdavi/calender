@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>تقویم ۱۴۰۵</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./calendar-data.js"></script>
+    <script src="./calendar.js" defer></script>
+  </head>
+  <body data-print-size="a1">
+    <header class="app-toolbar">
+      <div class="brand">
+        <strong>تقویم ۱۴۰۵</strong>
+        <span>notesofmyroad.ir | چاپ رنگی</span>
+      </div>
+      <div class="toolbar-actions">
+        <div class="size-switcher" aria-label="سایز چاپ">
+          <button type="button" class="size-option is-active" data-print-size="a1" aria-pressed="true">A1</button>
+          <button type="button" class="size-option" data-print-size="a2" aria-pressed="false">A2</button>
+          <button type="button" class="size-option" data-print-size="a3" aria-pressed="false">A3</button>
+        </div>
+        <button class="print-button" id="printButton" type="button" title="چاپ تقویم" aria-label="چاپ تقویم">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 9V3h12v6" />
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+            <path d="M6 14h12v7H6z" />
+            <path d="M18 12h.01" />
+          </svg>
+          <span>چاپ</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="stage" id="stage">
+      <div class="sheet-wrap" id="sheetWrap">
+        <section class="sheet" id="calendarSheet" aria-label="تقویم سالانه ۱۴۰۵">
+          <section class="calendar-shell" id="calendarGrid"></section>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
