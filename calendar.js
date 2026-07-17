@@ -1,13 +1,31 @@
 "use strict";
 
 const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
+const gregorianMonths = [
+  "",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+const seasons = [
+  { name: "SPRING", fa: "بهار", startMonth: 1, color: "#199B62" },
+  { name: "SUMMER", fa: "تابستان", startMonth: 4, color: "#E99A00" },
+  { name: "AUTUMN", fa: "پاییز", startMonth: 7, color: "#B84A32" },
+  { name: "WINTER", fa: "زمستان", startMonth: 10, color: "#3568A8" },
+];
 
 function toFa(value) {
   return String(value).replace(/[0-9]/g, (digit) => persianDigits[Number(digit)]);
-}
-
-function pad2(value) {
-  return String(value).padStart(2, "0");
 }
 
 function element(tag, className, text) {
@@ -54,6 +72,14 @@ function groupDaysByMonth(days) {
   return groups;
 }
 
+function rangeLabel(values) {
+  const unique = [...new Set(values.filter(Boolean))];
+  if (unique.length <= 1) {
+    return unique[0] || "";
+  }
+  return `${unique[0]} — ${unique[unique.length - 1]}`;
+}
+
 function renderDayCell(day) {
   const classes = ["day-cell"];
   if (day.is_friday) {
@@ -67,42 +93,115 @@ function renderDayCell(day) {
   cell.setAttribute("aria-label", day.solar.label);
 
   const solarRow = element("div", "solar-row");
-  solarRow.append(element("span", "weekday-full", day.weekday.name));
-  solarRow.append(element("span", "day-number", toFa(day.solar.day)));
+  const dayCalendarDates = element("div", "day-calendar-dates");
+  dayCalendarDates.append(element("span", "weekday-full", day.weekday.name));
 
   const dateStack = element("div", "date-stack");
-  dateStack.append(element("span", "hijri-date", day.hijri.label));
-  dateStack.append(element("span", "gregorian-date", day.gregorian.label));
+  dateStack.append(
+    element("span", "hijri-date", `${toFa(day.hijri.day)} ${day.hijri.month_name}`),
+  );
+  dateStack.append(
+    element(
+      "span",
+      "gregorian-date",
+      `${day.gregorian.day} ${gregorianMonths[day.gregorian.month]}`,
+    ),
+  );
+  dayCalendarDates.append(dateStack);
+
+  const dayIdentity = element("div", "day-identity");
+  dayIdentity.append(element("span", "day-number", toFa(day.solar.day)));
+  dayIdentity.append(element("span", "solar-label", day.solar.month_name));
+  if (day.is_holiday) {
+    dayIdentity.append(element("span", "holiday-badge", "تعطیل رسمی"));
+  } else if (day.is_friday) {
+    dayIdentity.append(
+      element("span", "holiday-badge friday-holiday-badge", "تعطیل"),
+    );
+  }
+  solarRow.append(dayCalendarDates, dayIdentity);
 
   const eventBox = element("div", "event-text");
   for (const eventName of day.display_events.slice(0, 3)) {
     eventBox.append(element("span", "event-line", eventName));
   }
 
-  cell.append(solarRow, dateStack, eventBox);
+  cell.append(solarRow, eventBox);
 
   return cell;
 }
 
-function renderBlankCell(slotNumber) {
-  const cell = element("div", "day-cell blank");
+function renderBlankCell(slotNumber, month) {
+  const classes = ["day-cell", "blank", `blank-slot-${slotNumber}`];
+  if (month.number >= 7) {
+    classes.push("merged-blank");
+  }
+  if (month.number === 7 && slotNumber === 31) {
+    classes.push("merged-start");
+  }
+  if (month.number === 12) {
+    classes.push("merged-end");
+  }
+  const cell = element("div", classes.join(" "));
   cell.setAttribute("aria-label", `روز ${toFa(slotNumber)} ندارد`);
   return cell;
 }
 
-function renderMonthPanel(month) {
+function renderMonthPanel(month, monthDays) {
   const panel = element("aside", "month-panel");
   panel.style.setProperty("--month-color", month.color);
 
-  panel.append(element("span", "month-index", toFa(pad2(month.number))));
-  panel.append(element("strong", "month-name", month.name));
+  const title = element("div", "month-title");
+  title.append(element("strong", "month-name", month.name));
+  title.append(element("span", "month-latin", month.latin));
 
   const details = element("div", "month-details");
-  details.append(element("b", "", month.latin.toUpperCase()));
-  details.append(element("span", "", month.gregorian_range));
-  panel.append(details);
+  const gregorianRange = rangeLabel(
+    monthDays.map((day) => gregorianMonths[day.gregorian.month]),
+  );
+  const hijriRange = rangeLabel(monthDays.map((day) => day.hijri.month_name));
+  const gregorianLine = element("span", "month-calendar-range gregorian-range");
+  gregorianLine.setAttribute("aria-label", `ماه‌های میلادی: ${gregorianRange}`);
+  gregorianLine.append(element("span", "", gregorianRange));
+  const hijriLine = element("span", "month-calendar-range hijri-range");
+  hijriLine.setAttribute("aria-label", `ماه‌های قمری: ${hijriRange}`);
+  hijriLine.append(element("span", "", hijriRange));
+  details.append(gregorianLine, hijriLine);
+  panel.append(title, details);
 
   return panel;
+}
+
+function renderSeasonPanels(calendarGrid) {
+  for (const season of seasons) {
+    const panel = element("aside", "season-panel");
+    panel.style.setProperty("--season-color", season.color);
+    panel.style.gridRow = `${season.startMonth} / span 3`;
+    panel.setAttribute("aria-label", season.name);
+
+    const word = element("span", "season-word");
+    for (const letter of season.name) {
+      word.append(element("span", "season-letter", letter));
+    }
+    panel.append(word);
+    calendarGrid.append(panel);
+  }
+}
+
+function renderMergedBrand(calendarGrid) {
+  const brand = element("aside", "merged-brand");
+  brand.setAttribute("aria-label", "c.notesofmyroad.ir");
+
+  const siteName = element("span", "site-word");
+  for (const letter of "C.NOTESOFMYROAD.IR") {
+    siteName.append(element("span", "site-letter", letter));
+  }
+
+  const qr = element("img", "site-qr");
+  qr.src = "./qr-notesofmyroad.svg";
+  qr.alt = "QR c.notesofmyroad.ir";
+  brand.append(siteName, qr);
+  calendarGrid.append(brand);
 }
 
 function renderCalendar(data) {
@@ -111,7 +210,8 @@ function renderCalendar(data) {
 
   const groupedDays = groupDaysByMonth(data.days);
   calendarGrid.textContent = "";
-  calendarGrid.append(element("aside", "side-title", "تقویم 1405 - notesofmyroad.ir"));
+  renderSeasonPanels(calendarGrid);
+  renderMergedBrand(calendarGrid);
 
   for (const month of data.months) {
     const row = element("article", "month-row");
@@ -123,10 +223,10 @@ function renderCalendar(data) {
 
     for (let slot = 1; slot <= dayColumns; slot += 1) {
       const day = dayMap.get(slot);
-      dayGrid.append(day ? renderDayCell(day) : renderBlankCell(slot));
+      dayGrid.append(day ? renderDayCell(day) : renderBlankCell(slot, month));
     }
 
-    row.append(dayGrid, renderMonthPanel(month));
+    row.append(dayGrid, renderMonthPanel(month, monthDays));
     calendarGrid.append(row);
   }
 }
@@ -143,11 +243,12 @@ function updatePrintSize(size) {
 
 function updatePrintPageStyle(size) {
   const pageSizes = {
+    poster: "930mm 500mm",
     a1: "841mm 594mm",
     a2: "594mm 420mm",
     a3: "420mm 297mm",
   };
-  const pageSize = pageSizes[size] || pageSizes.a1;
+  const pageSize = pageSizes[size] || pageSizes.poster;
   let style = document.getElementById("dynamicPrintPage");
   if (!style) {
     style = document.createElement("style");
@@ -175,7 +276,7 @@ function fitSheet() {
 async function init() {
   const data = await loadCalendarData();
   renderCalendar(data);
-  updatePrintPageStyle(document.body.dataset.printSize || "a1");
+  updatePrintPageStyle(document.body.dataset.printSize || "poster");
   fitSheet();
 
   document.getElementById("printButton").addEventListener("click", () => window.print());

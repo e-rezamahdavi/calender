@@ -5,29 +5,33 @@
   "layout": {
     "day_columns": 31,
     "month_columns": 1,
-    "total_columns": 32,
+    "season_columns": 1,
+    "total_columns": 33,
     "month_rows": 12,
-    "print_size": "A1 landscape",
+    "print_size": "930 x 500 mm landscape",
     "month_column_position": "right",
+    "season_column_position": "right_of_months",
     "day_column_order": "1-to-31 right-to-left",
     "weekday_display": "full_name",
     "cell_lines": [
       "solar_day_number",
+      "solar_month_name",
       "weekday_full_name",
-      "hijri_label_with_year",
-      "gregorian_label",
+      "hijri_day_and_month",
+      "gregorian_day_and_month",
       "events"
     ],
     "print_sizes": [
+      "930 x 500 mm landscape",
       "A1 landscape",
       "A2 landscape",
       "A3 landscape"
     ],
     "color_print": true,
-    "site": "notesofmyroad.ir",
-    "gregorian_display": "D Month YYYY",
-    "empty_cell_use": "blank_colored_cells_only",
-    "left_side_label": "تقویم 1405 - notesofmyroad.ir",
+    "site": "c.notesofmyroad.ir",
+    "gregorian_display": "D Month",
+    "hijri_display": "D Month",
+    "empty_cell_use": "merged_colored_note_area_for_short_months",
     "extra_branding_inside_calendar": false,
     "barcodes_inside_calendar": false
   },
@@ -41,7 +45,7 @@
       "name": "فروردین",
       "latin": "Farvardin",
       "days": 31,
-      "color": "#70BD76",
+      "color": "#269B63",
       "gregorian_range": "March - April"
     },
     {
@@ -49,7 +53,7 @@
       "name": "اردیبهشت",
       "latin": "Ordibehesht",
       "days": 31,
-      "color": "#98D17E",
+      "color": "#58A33B",
       "gregorian_range": "April - May"
     },
     {
@@ -57,7 +61,7 @@
       "name": "خرداد",
       "latin": "Khordad",
       "days": 31,
-      "color": "#B6CC52",
+      "color": "#9B9D22",
       "gregorian_range": "May - June"
     },
     {
@@ -65,7 +69,7 @@
       "name": "تیر",
       "latin": "Tir",
       "days": 31,
-      "color": "#47AA78",
+      "color": "#D69A00",
       "gregorian_range": "June - July"
     },
     {
@@ -73,7 +77,7 @@
       "name": "مرداد",
       "latin": "Mordad",
       "days": 31,
-      "color": "#78B763",
+      "color": "#E26918",
       "gregorian_range": "July - August"
     },
     {
@@ -81,7 +85,7 @@
       "name": "شهریور",
       "latin": "Shahrivar",
       "days": 31,
-      "color": "#C8CA52",
+      "color": "#C87A18",
       "gregorian_range": "August - September"
     },
     {
@@ -89,7 +93,7 @@
       "name": "مهر",
       "latin": "Mehr",
       "days": 30,
-      "color": "#DFB148",
+      "color": "#C45B2D",
       "gregorian_range": "September - October"
     },
     {
@@ -97,7 +101,7 @@
       "name": "آبان",
       "latin": "Aban",
       "days": 30,
-      "color": "#E38C48",
+      "color": "#AA4938",
       "gregorian_range": "October - November"
     },
     {
@@ -105,7 +109,7 @@
       "name": "آذر",
       "latin": "Azar",
       "days": 30,
-      "color": "#83CCDE",
+      "color": "#765B82",
       "gregorian_range": "November - December"
     },
     {
@@ -113,7 +117,7 @@
       "name": "دی",
       "latin": "Dey",
       "days": 30,
-      "color": "#62B8DF",
+      "color": "#286DA8",
       "gregorian_range": "December - January"
     },
     {
@@ -121,7 +125,7 @@
       "name": "بهمن",
       "latin": "Bahman",
       "days": 30,
-      "color": "#4FC4CA",
+      "color": "#287F99",
       "gregorian_range": "January - February"
     },
     {
@@ -129,7 +133,7 @@
       "name": "اسفند",
       "latin": "Esfand",
       "days": 29,
-      "color": "#78CFB3",
+      "color": "#596DA5",
       "gregorian_range": "February - March"
     }
   ],
