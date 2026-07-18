@@ -605,6 +605,26 @@ button {
   z-index: 0;
 }
 
+.brand-years {
+  align-items: center;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  font-size: 2.25mm;
+  line-height: 1.45;
+  white-space: nowrap;
+  z-index: 1;
+}
+
+.brand-year-title {
+  font-size: 3mm;
+  font-weight: 1000;
+}
+
+.brand-year-range {
+  font-weight: 800;
+}
+
 .site-word {
   align-items: center;
   color: #fff;
@@ -613,7 +633,7 @@ button {
   font-family: "Noto Sans", Arial, sans-serif;
   font-size: 4.3mm;
   font-weight: 1000;
-  height: calc(100% - 37mm);
+  height: calc(100% - 61mm);
   justify-content: space-around;
   line-height: 1;
   width: 100%;

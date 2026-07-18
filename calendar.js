@@ -190,7 +190,17 @@ function renderSeasonPanels(calendarGrid) {
 
 function renderMergedBrand(calendarGrid) {
   const brand = element("aside", "merged-brand");
-  brand.setAttribute("aria-label", "c.notesofmyroad.ir");
+  brand.setAttribute(
+    "aria-label",
+    "تقویم ۱۴۰۵ هجری شمسی، ۲۰۲۶ تا ۲۰۲۷ میلادی، ۱۴۴۷ تا ۱۴۴۸ هجری قمری، c.notesofmyroad.ir",
+  );
+
+  const years = element("div", "brand-years");
+  years.append(
+    element("strong", "brand-year-title", "تقویم ۱۴۰۵"),
+    element("span", "brand-year-range", "2026–2027"),
+    element("span", "brand-year-range", "۱۴۴۷–۱۴۴۸"),
+  );
 
   const siteName = element("span", "site-word");
   for (const letter of "C.NOTESOFMYROAD.IR") {
@@ -200,7 +210,7 @@ function renderMergedBrand(calendarGrid) {
   const qr = element("img", "site-qr");
   qr.src = "./qr-notesofmyroad.svg";
   qr.alt = "QR c.notesofmyroad.ir";
-  brand.append(siteName, qr);
+  brand.append(years, siteName, qr);
   calendarGrid.append(brand);
 }
 
